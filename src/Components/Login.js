@@ -34,6 +34,7 @@ const schema = yup.object().shape({
             })
             .then((res) => {
                 console.log(res)
+                sessionStorage.setItem("isLoggedIn", true);
                 sessionStorage.setItem("custID", res.data["custID"])
                 sessionStorage.setItem("accountKey", res.data["accountKey"])
                 history.replace("/home");
