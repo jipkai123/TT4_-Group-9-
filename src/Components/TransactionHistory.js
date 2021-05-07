@@ -3,12 +3,12 @@ import TransactionItem from './TransactionItem'
 import { useState, useEffect } from 'react';
 
 const TransactionHistory = (props) => {
-    let transactions = [];
-    let accountInfo = [];
     const [filterMonth, setFilterMonth] = useState(new Date().toLocaleString('en-US', { month: 'long' }));
     const [filterYear, setFilterYear] = useState(new Date().getFullYear());
+    const [accountInfo, setAccountInfo] = useState([]);
+    const [transactions, setTransactionData] = useState([]);
 
-    async function getInfo() {
+    /*async function getAccountInfo() {
         try {
             let accountKey = sessionStorage.getItem('accountKey');
             let custID = sessionStorage.getItem('custID');
@@ -16,20 +16,20 @@ const TransactionHistory = (props) => {
                 method: "POST",
                 headers: { "x-api-key": "Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m" },
                 body: JSON.stringify({
-                    "custID": custID,
+                    "custID": parseInt(custID),
                     "accountKey": accountKey
                 })
             }).then(response => response.json())
                 .then(data => {
-                    accountInfo = data;
+                    setAccountInfo(data);
                 });
         } catch (err) {
             console.error(err.message);
         }
     }
     useEffect(() => {
-        getInfo();
-    }, []);
+        getAccountInfo();
+    }, []);*/
 
     async function getTransactions() {
         try {
@@ -39,12 +39,12 @@ const TransactionHistory = (props) => {
                 method: "POST",
                 headers: { "x-api-key": "Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m" },
                 body: JSON.stringify({
-                    "custID": custID,
+                    "custID": parseInt(custID),
                     "accountKey": accountKey
                 })
             }).then(response => response.json())
                 .then(data => {
-                    transactions = data;
+                    setTransactionData(data);
                 });
         } catch (err) {
             console.error(err.message);
@@ -55,9 +55,11 @@ const TransactionHistory = (props) => {
     }, []);
 
     // const filteredTransactionHistory = transactions;
-    const filteredTransactionHistory = transactions.filter(transaction =>
-        new Date(transaction.datetime).toLocaleString('en-US', { month: 'long' }) === filterMonth &&
-        new Date(transaction.datetime).getFullYear().toString() === filterYear);
+    let filteredTransactionHistory = [];
+    if (transactions.length > 0)
+        filteredTransactionHistory = transactions.filter(transaction =>
+            new Date(transaction.datetime).toLocaleString('en-US', { month: 'long' }) === filterMonth &&
+            new Date(transaction.datetime).getFullYear().toString() === filterYear);
 
     let transactionListContent = <p>No Transactions Found.</p>;
     if (filteredTransactionHistory.length > 0)
@@ -74,8 +76,8 @@ const TransactionHistory = (props) => {
     return (
         <div>
             <div className="account-details">
-                <h2>{accountInfo.accountName}</h2>
-                <h5>{accountInfo.accountNumber}</h5>
+                <h2>Multiplier Account</h2>
+                <h5>12152818</h5>
             </div>
             <div className='expenses-filter'>
                 <div className='expenses-filter__control'>
