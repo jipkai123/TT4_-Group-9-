@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import React from 'react';
 import PrivateRoute from './Components/PrivateRoute';
 import ViewBalance from './Components/ViewBalance';
+import TransactionHistory from './Components/TransactionHistory';
 
 //import Components here
 
@@ -14,6 +15,7 @@ function App() {
 	routes = (
 		<Switch>
       <PrivateRoute path="/home" component={ViewBalance} />
+      <PrivateRoute path="/transactions" component={TransactionHistory} />
       <Route exact path='/login' component={Login} />
 			<Route exact path="/">
 				<Redirect to="/login" />
