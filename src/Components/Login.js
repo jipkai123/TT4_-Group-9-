@@ -1,9 +1,10 @@
 import React from 'react';
-import './App.css';
+import '../App.css';
 import * as yup from "yup";
 import { Formik } from "formik";
 import { Form, Col, Button, Container, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
 const schema = yup.object().shape({
     userName: yup.string().required('*Required'),
@@ -16,14 +17,32 @@ const schema = yup.object().shape({
         validationSchema={schema}
         onSubmit={(values, { setSubmitting, resetForm}) => {
             const { userName, userPass, saveLogin } = values;
-            localStorage.setItem('saveLogin', saveLogin);
-            localStorage.setItem('userName', saveLogin ? userName : '');
-            localStorage.setItem('userPass', saveLogin ? userPass : '');
-             setTimeout(() => {
-               alert(JSON.stringify(values, null, 2));
-               setSubmitting(false);
-             }, 400);
-             resetForm()
+            //localStorage.setItem('saveLogin', saveLogin);
+            //localStorage.setItem('userName', saveLogin ? userName : '');
+            //localStorage.setItem('userPass', saveLogin ? userPass : '');
+            axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/login',
+            JSON.stringify({userName, userPass}),
+            {
+                headers: {
+                    "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m',
+                    'Content-Type': 'application/json'
+                },
+                data: {userName, userPass}
+            })
+            .then((res) => {
+                console.log(res)
+                //sessionStorage.setItem("isLoggedIn", true);
+                //let expiry = new Date();
+					      //expiry.setSeconds(expiry.getSeconds() + 60);
+                //sessionStorage.setItem("expiry",expiry);
+                //sessionStorage.setItem("custID", res.data["custID"])
+                //history.replace("/home");
+
+            }).catch((error) => {
+                alert("You have entered the wrong username or password.")
+                console.log(error)
+            });
+            
              }}
         initialValues={{
           userName: '',
@@ -77,16 +96,12 @@ const schema = yup.object().shape({
             <Form.Group>
               <Form.Check id="validationFormik0" custom>
                 <Form.Check.Input
-                    required
                     name="saveLogin"
                     onChange={handleChange}
                     onBlur ={handleBlur}
-                    isInvalid={touched.terms && !!errors.terms}
+                    value={values.saveLogin}
                 />
                 <Form.Check.Label>Remember Me</Form.Check.Label>
-                <Form.Control.Feedback type="invalid">
-                  {errors.terms}
-                </Form.Control.Feedback>
               </Form.Check>
             </Form.Group>
             <Button type="submit" variant='danger'>Login</Button>
