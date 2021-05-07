@@ -34,11 +34,8 @@ const schema = yup.object().shape({
             })
             .then((res) => {
                 console.log(res)
-                //sessionStorage.setItem("isLoggedIn", true);
-                //let expiry = new Date();
-					      //expiry.setSeconds(expiry.getSeconds() + 60);
-                //sessionStorage.setItem("expiry",expiry);
-                //sessionStorage.setItem("custID", res.data["custID"])
+                sessionStorage.setItem("custID", res.data["custID"])
+                sessionStorage.setItem("accountKey", res.data["accountKey"])
                 history.replace("/home");
 
             }).catch((error) => {
