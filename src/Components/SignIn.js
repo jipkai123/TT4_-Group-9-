@@ -1,5 +1,7 @@
 import React from 'react';
 import { login } from '../utils';
+import logo from './logo.svg';
+import Login from './Login';
 
 const SignIn = (props) => {
 
@@ -14,6 +16,8 @@ const SignIn = (props) => {
 
             <button onClick={() => handleLogin()}>Click here to log in</button>
         </div>
+
+    
     );
 };
 
