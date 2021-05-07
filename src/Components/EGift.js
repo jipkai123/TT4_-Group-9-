@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { Formik } from "formik";
 import { Form, Col, Button, Container, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "./EGift.css"
 import axios from 'axios';
 
 var amountSchema = yup.number().required('*Required').min(1)
@@ -78,7 +79,10 @@ function EGiftForm() {
 			}) => (
 				<Container className = 'border'>
 					<Form noValidate onSubmit={handleSubmit}>
-						<Image className = 'img' src="https://logos-download.com/wp-content/uploads/2016/12/DBS_Bank_logo_logotype.png"/>
+						<div className="image-bar">
+							<Image className='img-image-bar' src="https://logos-download.com/wp-content/uploads/2016/12/DBS_Bank_logo_logotype.png"/>
+							<Image className='img-image-bar' src="egift.png"/>
+						</div>
 						<p>{`Available Balance: ${availableBal}`}</p>
 						<Form.Group as={Col} md="12" controlId="validationFormik01">
 							<Form.Label>Payee ID</Form.Label>
