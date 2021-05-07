@@ -53,24 +53,27 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-      
-        <Switch>
-          <Redirect from="/" exact to="/login" />
-          <Route path="/login" component={Login} />
-          <Navbar bg="light" expand="lg">
-          <Navbar.Brand href="/login">React-Bootstrap</Navbar.Brand>
+      <Navbar bg="light" expand="lg">
+          <Navbar.Brand href="/login">SEEDWallet DBS</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/home">Home</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link href="/home">Home</Nav.Link>
+              <Nav.Link href="/egift">Egift</Nav.Link>
+              <Nav.Link href="/transactions">Transaction History</Nav.Link>
             </Nav>
             <Form inline>
               <FormControl type="text" placeholder="Search" className="mr-sm-2" />
               <Button variant="outline-success">Search</Button>
             </Form>
           </Navbar.Collapse>
-        </Navbar>
+        </Navbar> 
+        <Switch>
+          <Redirect from="/" exact to="/login" />
+          <Route path="/login" component={Login} />
+          
+
           <PrivateRoute path="/home" component={ViewBalance} />
           <PrivateRoute path="/transactions" component={TransactionHistory} />
           <PrivateRoute path="/egift" component={EGift} />
