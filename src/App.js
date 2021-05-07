@@ -1,12 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
-import './styles.scss';
+//import './styles.scss';
 import React, { Component, lazy, Suspense } from 'react';
-import Home from './Components/Home';
-import Dashboard from './Components/Dashboard';
-import SignIn from './Components/SignIn';
 import PrivateRoute from './Components/PrivateRoute';
-import PublicRoute from './Components/PublicRoute';
 import Login from './Components/Login';
 import { withRouter } from 'react-router';
 import NotFound  from './Components/NotFound';
@@ -17,7 +13,6 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import PrivateRoute from './Components/PrivateRoute';
 import ViewBalance from './Components/ViewBalance';
 
 //import Components here
@@ -56,6 +51,7 @@ class App extends Component {
         <Switch>
           <Redirect from="/" exact to="/login" />
           <Route path="/login" component={Login} />
+          <PrivateRoute path="/home" component={ViewBalance} />
           <Route exact path="**" component={NotFound} />
         </Switch>
       </BrowserRouter>

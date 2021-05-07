@@ -8,8 +8,8 @@ const NavBar = props => (
       <NavLink to="/login" activeClassName="active-link">
         login
       </NavLink>
-      <NavLink to="/viewbalance" activeClassName="active-link">
-        viewbalance
+      <NavLink to="/home" activeClassName="active-link">
+        balance
       </NavLink>
       <NavLink to="/about" activeClassName="active-link">
         About
