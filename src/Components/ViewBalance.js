@@ -4,7 +4,7 @@ import axios from 'axios';
 
 class ViewBalance extends Component {
     state = {
-        accounts = []
+        accounts: []
     };
 
     componentDidMount() {
@@ -13,9 +13,10 @@ class ViewBalance extends Component {
     
     checkAmountBalance () {
         const data = JSON.stringify({
-            custID: sessionStorage.getItem('custID'),
+            custID: parseInt(sessionStorage.getItem('custID')),
             accountKey: sessionStorage.getItem('accountKey'),
         });
+        console.log(data)
      axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/accounts',
             {
                 headers: {
@@ -24,8 +25,18 @@ class ViewBalance extends Component {
                 data: data
             })
             .then((res) => {
-                console.log(res)
-                //history.replace("/home");
+                let accounts = res.data;
+                for (let i = 0; i < accounts.length; i++) {
+                    if (accounts[i]['linked'] == true) {
+                    accounts[i]['islinked'] = 'Yes';
+              }
+              else {
+                accounts[i]['islinked'] = 'No';
+              }
+            }
+            
+            this.setState({ accounts: accounts });
+            console.log(accounts)
 
             }).catch((error) => {
                 alert("Unable to retrieve account balance")
@@ -49,7 +60,7 @@ class ViewBalance extends Component {
               </thead>
               <tbody>
               { this.state.accounts.map(account => 
-                <tr key="{accounts.key}">
+                <tr key={account.accountNumber}>
                   <td>{account.accountName}</td>
                   <td>{account.accountNumber}</td>
                   <td>${account.availableBal}</td>
@@ -64,4 +75,4 @@ class ViewBalance extends Component {
       }
     }
     
-    export default ViewBalance;
+export default ViewBalance;

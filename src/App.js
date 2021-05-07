@@ -4,6 +4,7 @@ import Login from './Components/Login';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import React from 'react';
 import PrivateRoute from './Components/PrivateRoute';
+import ViewBalance from './Components/ViewBalance';
 
 //import Components here
 
@@ -12,6 +13,7 @@ function App() {
 
 	routes = (
 		<Switch>
+      <PrivateRoute path="/home" component={ViewBalance} />
       <Route exact path='/login' component={Login} />
 			<Route exact path="/">
 				<Redirect to="/login" />
