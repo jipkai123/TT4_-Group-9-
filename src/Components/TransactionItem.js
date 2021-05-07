@@ -1,10 +1,10 @@
 import './TransactionItem.css';
 
 const TransactionItem = (props) => {
-    let date = new Date(props.date)
+    let date = new Date(props.date * 1000)
     const month = date.toLocaleString('en-US', { month: 'long' });
-    const year = date.toLocaleString('en-US', { day: '2-digit' });
-    const day = date.getFullYear();
+    const day = date.toLocaleString('en-US', { day: '2-digit' });
+    const year = date.getFullYear();
     const time = date.toLocaleTimeString();
 
     return (

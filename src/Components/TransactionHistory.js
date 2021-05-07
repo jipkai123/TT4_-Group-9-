@@ -1,5 +1,6 @@
 import './TransactionHistory.css'
 import TransactionItem from './TransactionItem'
+import ChartBar from './ChartBar'
 import { useState, useEffect } from 'react';
 
 const TransactionHistory = (props) => {
@@ -59,8 +60,8 @@ const TransactionHistory = (props) => {
     let filteredTransactionHistory = [];
     if (transactions.length > 0)
         filteredTransactionHistory = transactions.filter(transaction =>
-            new Date(transaction.datetime).toLocaleString('en-US', { month: 'long' }) === filterMonth &&
-            new Date(transaction.datetime).getFullYear().toString() === filterYear);
+            new Date(transaction.datetime * 1000).toLocaleString('en-US', { month: 'long' }) === filterMonth &&
+            new Date(transaction.datetime * 1000).getFullYear().toString() === filterYear);
 
     let transactionListContent = <p>No Transactions Found.</p>;
     if (filteredTransactionHistory.length > 0)
@@ -73,6 +74,59 @@ const TransactionHistory = (props) => {
     const dropdownChangeYearHandler = (e) => {
         setFilterYear(e.target.value);
     };
+
+    const chartDataPoints = [
+        { label: '01', value: 0 },
+        { label: '02', value: 0 },
+        { label: '03', value: 0 },
+        { label: '04', value: 0 },
+        { label: '05', value: 0 },
+        { label: '06', value: 0 },
+        { label: '07', value: 0 },
+        { label: '08', value: 0 },
+        { label: '09', value: 0 },
+        { label: '10', value: 0 },
+        { label: '11', value: 0 },
+        { label: '12', value: 0 },
+        { label: '13', value: 0 },
+        { label: '14', value: 0 },
+        { label: '15', value: 0 },
+        { label: '16', value: 0 },
+        { label: '17', value: 0 },
+        { label: '18', value: 0 },
+        { label: '19', value: 0 },
+        { label: '20', value: 0 },
+        { label: '21', value: 0 },
+        { label: '22', value: 0 },
+        { label: '23', value: 0 },
+        { label: '24', value: 0 },
+        { label: '25', value: 0 },
+        { label: '26', value: 0 },
+        { label: '27', value: 0 },
+        { label: '28', value: 0 },
+        { label: '29', value: 0 },
+        { label: '30', value: 0 },
+        { label: '31', value: 0 },
+    ];
+
+    if (filteredTransactionHistory.length > 0) {
+        for (const transaction of filteredTransactionHistory) {
+            const transactionDate = new Date(transaction.datetime * 1000).toLocaleString('en-US', { day: '2-digit' });
+            console.log(transactionDate);
+            if (chartDataPoints[transactionDate] != undefined)
+                chartDataPoints[transactionDate].value += transaction.amount;
+        }
+        console.log(chartDataPoints);
+    }
+
+    const dataPointValues = chartDataPoints.map(dataPoint => dataPoint.value); //create array of 12 numbers
+    const totalMaximum = Math.max(...dataPointValues); // pull out maximum value of the array
+    let chartContent = "";
+    if (totalMaximum > 0)
+        chartContent =
+            <div className="chart">
+                {chartDataPoints.map(dataPoint => <ChartBar key={dataPoint.label} value={dataPoint.value} maxValue={totalMaximum} label={dataPoint.label} />)}
+            </div>
 
     return (
         <div>
@@ -107,6 +161,7 @@ const TransactionHistory = (props) => {
                     </select>
                 </div>
             </div>
+            {chartContent}
             <div>
                 <ul className='expenses-list'>
                     {transactionListContent}
