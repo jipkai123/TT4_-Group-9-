@@ -12,7 +12,8 @@ var amountSchema = yup.number().required('*Required').min(1)
 var initialSchema = yup.object().shape({
 	payeeID: yup.number().required('*Required').min(1),
 	amount: amountSchema,
-	message: yup.string().notRequired()
+	message: yup.string().notRequired(),
+	isEGift: yup.boolean().notRequired()
 })
 
 function getBalance(custID, accountKey, setAvailableBal, setSchema) {
@@ -29,7 +30,8 @@ function getBalance(custID, accountKey, setAvailableBal, setSchema) {
 			setSchema(yup.object().shape({
 				payeeID: yup.number().required('*Required'),
 				amount: amountSchema.concat(yup.number().max(res.data[0].availableBal)),
-				message: yup.string().notRequired()
+				message: yup.string().notRequired(),
+				egift: yup.boolean().notRequired()
 			}))
 		}).catch((error) => {
 			alert("Unable to retrieve account information.");
@@ -39,12 +41,12 @@ function getBalance(custID, accountKey, setAvailableBal, setSchema) {
 		});
 }
 
-function sendEGift(payeeID, amount, custID, accountKey, eGift, setAvailableBal, setSchema, setIsSending) {
+function sendEGift(payeeID, amount, custID, accountKey, message, eGift, setAvailableBal, setSchema, setIsSending) {
 	axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/transactions/add',
-	JSON.stringify({payeeID, amount, custID, accountKey, eGift}),
+	JSON.stringify({payeeID, amount, custID, message, accountKey, eGift}),
 		{
 			headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
-			data: {payeeID, amount, custID, accountKey, eGift}
+			data: {payeeID, amount, custID, message, accountKey, eGift}
 		}
 	)
 		.then((res) => {
@@ -74,13 +76,15 @@ function EGiftForm() {
 			onSubmit={(values, { setSubmitting, resetForm }) => {
 				setIsSending(true);
 				const eGift = true;
-				const { payeeID, amount } = values;
-				sendEGift(payeeID, amount, custID, accountKey, eGift, setAvailableBal, setSchema, setIsSending);
+				const { payeeID, amount, message } = values;
+				console.log(message)
+				sendEGift(payeeID, amount, custID, accountKey, message, eGift, setAvailableBal, setSchema, setIsSending);
 			}}
 			initialValues={{
 				payeeID: '',
 				amount: '',
-				message: ''
+				message: '',
+				isEGift: false
 			}}
 		>
 			{({
