@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import Login from './Components/Login';
 //import Components here
 
 function App() {
@@ -10,7 +11,7 @@ function App() {
 			<PrivateRoute path="/home" component={ViewBalance} />
 			<PrivateRoute path="/AddTransaction" component={AddTransaction} />
 			<PrivateRoute path="/TransactionHistory" component={TransactionHistory} />
-      <Route exact path='/login' component={Loginpage} />
+      <Route exact path='/login' component={Login} />
 			<Route exact path="/">
 				<Redirect to="/login" />
 			</Route>
