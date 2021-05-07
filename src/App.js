@@ -1,5 +1,6 @@
 import logo from './logo.svg';
-import './App.css';
+import 'bulma/css/bulma.css';
+//import './App.css';
 //import './styles.scss';
 import React, { Component, lazy, Suspense } from 'react';
 import PrivateRoute from './Components/PrivateRoute';
