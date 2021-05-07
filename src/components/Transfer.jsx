@@ -1,8 +1,102 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import "./Transfer.css";
+import axios from "axios";
 
 class Transfer extends Component {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      custId: null,
+      accountKey: null,
+      payeeId: null,
+      amount: null,
+      eGift: false,
+      message: null,
+      category: null,
+    };
+  }
+
+  handleOnCustIdChange = (event) => {
+    this.setState({
+      state: {
+        ...this.state,
+        custId: event.target.value,
+      },
+    });
+  };
+
+  handleOnAccountKeyChange = (event) => {
+    this.setState({
+      state: {
+        ...this.state,
+        accountKey: event.target.value,
+      },
+    });
+  };
+
+  handleOnPayeeIdChange = (event) => {
+    this.setState({
+      state: {
+        ...this.state,
+        payeeId: event.target.value,
+      },
+    });
+  };
+
+  handleOnAmountChange = (event) => {
+    this.setState({
+      state: {
+        ...this.state,
+        amount: event.target.value,
+      },
+    });
+  };
+
+  handleOnEGiftChange = (event) => {
+    this.setState({
+      state: {
+        ...this.state,
+        eGift: event.target.value,
+      },
+    });
+  };
+
+  handleOnMessageChange = (event) => {
+    this.setState({
+      state: {
+        ...this.state,
+        message: event.target.value,
+      },
+    });
+  };
+
+  handleOnCategoryChange = (event) => {
+    this.setState({
+      state: {
+        ...this.state,
+        category: event.target.value,
+      },
+    });
+  };
+
+  handleTransfer = () => {
+    const data = { ...this.object };
+    axios
+      .post(
+        "https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/transactions/add",
+        data,
+        {
+          headers: {
+            "x-api-key": "Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m",
+          },
+        }
+      )
+      .then(() => {})
+      .catch((error) => {
+        console.log("Transaction has failed", error);
+      });
+  };
+
   render() {
     return (
       // custID, accountKey, payeeID, amount, eGift, message
@@ -19,6 +113,7 @@ class Transfer extends Component {
                 type="number"
                 id="custID"
                 placeholder="Customer ID"
+                onChange="handleOnCustIdChange"
               ></input>
             </td>
           </tr>
@@ -32,6 +127,7 @@ class Transfer extends Component {
                 type="text"
                 id="accountKey"
                 placeholder=">Account Key"
+                onChange="handleOnAccountKeyChange"
               ></input>
             </td>
           </tr>
@@ -41,7 +137,12 @@ class Transfer extends Component {
               <label>Payee ID </label>
             </td>
             <td>
-              <input type="number" id="payeeID" placeholder="Payee ID"></input>
+              <input
+                type="number"
+                id="payeeID"
+                placeholder="Payee ID"
+                onChange="handleOnPayeeIdChange"
+              ></input>
             </td>
           </tr>
 
@@ -50,7 +151,12 @@ class Transfer extends Component {
               <label>Amount </label>
             </td>
             <td>
-              <input type="number" id="amount" placeholder="Amount"></input>
+              <input
+                type="number"
+                id="amount"
+                placeholder="Amount"
+                onChange="handleOnAmountChange"
+              ></input>
             </td>
           </tr>
 
@@ -59,7 +165,7 @@ class Transfer extends Component {
               <label>eGift </label>
             </td>
             <td>
-              <select id="eGift">
+              <select id="eGift" onChange="handleOnEGiftChange">
                 <option value="True">Yes</option>
                 <option value="False">No</option>
               </select>
@@ -71,7 +177,12 @@ class Transfer extends Component {
               <label>Message </label>
             </td>
             <td>
-              <input type="text" id="message" placeholder="Message"></input>
+              <input
+                type="text"
+                id="message"
+                placeholder="Message"
+                onChange="handleOnMessageChange"
+              ></input>
             </td>
           </tr>
 
@@ -80,7 +191,7 @@ class Transfer extends Component {
               <label>Expense Category </label>
             </td>
             <td>
-              <select id="category">
+              <select id="category" onChange="handleOnCategoryChange">
                 <option value="Entertainment">Entertainment</option>
                 <option value="Food">Food</option>
                 <option value="Insurance">Insurance</option>
@@ -95,7 +206,11 @@ class Transfer extends Component {
             <td></td>
             <td>
               <br />
-              <input type="submit" value="Transfer"></input>
+              <button
+                type="button"
+                value="Transfer"
+                onClick="handleTransfer"
+              ></button>
             </td>
           </tr>
         </table>
