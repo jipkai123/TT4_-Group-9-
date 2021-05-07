@@ -25,7 +25,6 @@ const schema = yup.object().shape({
             {
                 headers: {
                     "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m',
-                    'Content-Type': 'application/json'
                 },
                 data: {userName, userPass}
             })
