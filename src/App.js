@@ -53,7 +53,7 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-      <Navbar bg="light" expand="lg">
+      <Navbar>
           <Navbar.Brand href="/login">SEEDWallet DBS</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -63,16 +63,12 @@ class App extends Component {
               <Nav.Link href="/egift">Egift</Nav.Link>
               <Nav.Link href="/transactions">Transaction History</Nav.Link>
             </Nav>
-            <Form inline>
-              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-              <Button variant="outline-success">Search</Button>
-            </Form>
           </Navbar.Collapse>
-        </Navbar> 
+        </Navbar>
         <Switch>
           <Redirect from="/" exact to="/login" />
           <Route path="/login" component={Login} />
-          
+
 
           <PrivateRoute path="/home" component={ViewBalance} />
           <PrivateRoute path="/transactions" component={TransactionHistory} />
