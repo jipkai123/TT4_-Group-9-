@@ -15,53 +15,67 @@ var initialSchema = yup.object().shape({
 	message: yup.string().notRequired()
 })
 
+function getBalance(custID, accountKey, setAvailableBal, setSchema) {
+	axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/accounts',
+	JSON.stringify({custID, accountKey}),
+		{
+			headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
+			data: {custID, accountKey}
+		}
+	)
+		.then((res) => {
+			console.log(res.data[0]);
+			setAvailableBal(res.data[0].availableBal);
+			setSchema(yup.object().shape({
+				payeeID: yup.number().required('*Required'),
+				amount: amountSchema.concat(yup.number().max(res.data[0].availableBal)),
+				message: yup.string().notRequired()
+			}))
+		}).catch((error) => {
+			alert("Unable to retrieve account information.");
+			if (error.response) {
+				console.log(error.response.data)
+			}
+		});
+}
+
+function sendEGift(payeeID, amount, custID, accountKey, eGift, setAvailableBal, setSchema, setIsSending) {
+	axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/transactions/add',
+	JSON.stringify({payeeID, amount, custID, accountKey, eGift}),
+		{
+			headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
+			data: {payeeID, amount, custID, accountKey, eGift}
+		}
+	)
+		.then((res) => {
+			console.log(res);
+			getBalance(custID, accountKey, setAvailableBal, setSchema);
+			alert(res.data.message);
+			setIsSending(false);
+		}).catch((error) => {
+			alert("You have entered the wrong payeeID.")
+			console.log(error.response.data)
+		});
+}
+
 function EGiftForm() {
 	const custID = parseInt(sessionStorage.getItem('custID'));
 	const accountKey = sessionStorage.getItem('accountKey');
 	var [availableBal, setAvailableBal] = useState([]);
 	var [schema, setSchema] = useState(initialSchema);
+	var [isSending, setIsSending] = useState(false);
 	console.log(custID, accountKey)
 	useEffect(() => {
-		axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/accounts',
-			JSON.stringify({custID, accountKey}),
-			{
-				headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
-				data: {custID, accountKey}
-			}
-		)
-			.then((res) => {
-				console.log(res.data[0]);
-				setAvailableBal(res.data[0].availableBal);
-				setSchema(yup.object().shape({
-					payeeID: yup.number().required('*Required'),
-					amount: amountSchema.concat(yup.number().max(res.data[0].availableBal)),
-					message: yup.string().notRequired()
-				}))
-			}).catch((error) => {
-				alert("Unable to retrieve account information.");
-				console.log(error.response.data)
-			});
+		getBalance(custID, accountKey, setAvailableBal, setSchema);
 	}, []);
 	return (
 		<Formik
 			validationSchema={schema}
 			onSubmit={(values, { setSubmitting, resetForm }) => {
+				setIsSending(true);
 				const eGift = true;
 				const { payeeID, amount } = values;
-				axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/transactions/add',
-				JSON.stringify({payeeID, amount, custID, accountKey, eGift}),
-					{
-						headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
-						data: {payeeID, amount, custID, accountKey, eGift}
-					}
-				)
-					.then((res) => {
-						console.log(res)
-						alert(res.data.message)
-					}).catch((error) => {
-						alert("You have entered the wrong payeeID.")
-						console.log(error.response.data)
-					});
+				sendEGift(payeeID, amount, custID, accountKey, eGift, setAvailableBal, setSchema, setIsSending);
 			}}
 			initialValues={{
 				payeeID: '',
@@ -126,7 +140,19 @@ function EGiftForm() {
 								onBlur ={handleBlur}
 							/>
 						</Form.Group>
-						<Button type="submit" variant='danger'>Send eGift!</Button>
+						<Button type="submit" disabled={isSending} variant='danger'>
+							{isSending ?
+									<>
+										<i
+											className="fa fa-spinner fa-spin"
+											style={{ marginRight: "5px" }}
+										/>
+										<span>Sending eGift..</span>
+									</>
+								:
+								<span>Send eGift!</span>
+							}
+						</Button>
 					</Form>
 				</Container>
 			)}
