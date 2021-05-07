@@ -34,13 +34,7 @@ const schema = yup.object().shape({
             })
             .then((res) => {
                 console.log(res)
-                //sessionStorage.setItem("isLoggedIn", true);
-                //let expiry = new Date();
-					      //expiry.setSeconds(expiry.getSeconds() + 60);
-                //sessionStorage.setItem("expiry",expiry);
-                //sessionStorage.setItem("custID", res.data["custID"])
                 history.replace("/home");
-
             }).catch((error) => {
                 alert("You have entered the wrong username or password.")
                 console.log(error)
