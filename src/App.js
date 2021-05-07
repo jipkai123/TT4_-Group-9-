@@ -1,5 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
+import Home from './Components/Home';
+import Dashboard from './Components/Dashboard';
+import SignIn from './Components/SignIn';
+import PrivateRoute from './Components/PrivateRoute';
+import PublicRoute from './Components/PublicRoute';
 
 function App() {
   return (
@@ -22,4 +27,28 @@ function App() {
   );
 }
 
+
 export default App;
+
+/*
+import React, { Component } from 'react';
+import './App.css';
+import { BrowserRouter, Switch } from 'react-router-dom';
+
+
+class App extends Component {
+
+  render() {
+    return (
+      <BrowserRouter>
+        <Switch>
+          <PublicRoute restricted={false} component={Home} path="/" exact />
+          <PublicRoute restricted={true} component={SignIn} path="/signin" exact />
+          <PrivateRoute component={Dashboard} path="/dashboard" exact />
+        </Switch>
+      </BrowserRouter>
+    );
+  }
+}
+
+export default App;*/
