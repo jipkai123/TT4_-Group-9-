@@ -37,7 +37,6 @@ const schema = yup.object().shape({
                 sessionStorage.setItem("custID", res.data["custID"])
                 sessionStorage.setItem("accountKey", res.data["accountKey"])
                 history.replace("/home");
-
             }).catch((error) => {
                 alert("You have entered the wrong username or password.")
                 console.log(error)
