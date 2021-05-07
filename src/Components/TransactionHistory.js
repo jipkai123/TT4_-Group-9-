@@ -47,6 +47,7 @@ const TransactionHistory = (props) => {
                     setTransactionData(data);
                 });
         } catch (err) {
+            alert("Unable to retrieve transaction history")
             console.error(err.message);
         }
     }
