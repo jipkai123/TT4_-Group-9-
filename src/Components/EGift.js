@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
 import * as yup from "yup";
 import { Formik } from "formik";
@@ -6,28 +6,54 @@ import { Form, Col, Button, Container, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 
-const schema = yup.object().shape({
-	payeeID: yup.number().required('*Required'),
-	amount: yup.number().required('*Required'),
+var amountSchema = yup.number().required('*Required').min(1)
+
+var initialSchema = yup.object().shape({
+	payeeID: yup.number().required('*Required').min(1),
+	amount: amountSchema,
 	message: yup.string().notRequired()
-});
+})
 
 function EGiftForm() {
+	const custID = parseInt(sessionStorage.getItem('custID'));
+	const accountKey = sessionStorage.getItem('accountKey');
+	var [availableBal, setAvailableBal] = useState([]);
+	var [schema, setSchema] = useState(initialSchema);
+	console.log(custID, accountKey)
+	useEffect(() => {
+		axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/accounts',
+			JSON.stringify({custID, accountKey}),
+			{
+				headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
+				data: {custID, accountKey}
+			}
+		)
+			.then((res) => {
+				console.log(res.data[0]);
+				setAvailableBal(res.data[0].availableBal);
+				setSchema(yup.object().shape({
+					payeeID: yup.number().required('*Required'),
+					amount: amountSchema.concat(yup.number().max(res.data[0].availableBal)),
+					message: yup.string().notRequired()
+				}))
+			}).catch((error) => {
+				alert("Unable to retrieve account information.");
+				console.log(error.response.data)
+			});
+	}, []);
 	return (
 		<Formik
 			validationSchema={schema}
 			onSubmit={(values, { setSubmitting, resetForm }) => {
-				const custID = parseInt(sessionStorage.getItem('custID'));
-				const accountKey = sessionStorage.getItem('accountKey');
-				console.log(custID, accountKey)
 				const eGift = true;
 				const { payeeID, amount } = values;
 				axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/transactions/add',
 				JSON.stringify({payeeID, amount, custID, accountKey, eGift}),
-				{
-					headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
-					data: {payeeID, amount, custID, accountKey, eGift}
-				})
+					{
+						headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
+						data: {payeeID, amount, custID, accountKey, eGift}
+					}
+				)
 					.then((res) => {
 						console.log(res)
 						alert(res.data.message)
@@ -53,6 +79,7 @@ function EGiftForm() {
 				<Container className = 'border'>
 					<Form noValidate onSubmit={handleSubmit}>
 						<Image className = 'img' src="https://logos-download.com/wp-content/uploads/2016/12/DBS_Bank_logo_logotype.png"/>
+						<p>{`Available Balance: ${availableBal}`}</p>
 						<Form.Group as={Col} md="12" controlId="validationFormik01">
 							<Form.Label>Payee ID</Form.Label>
 							<Form.Control
@@ -65,7 +92,7 @@ function EGiftForm() {
 								isInvalid={touched.payeeID && !!errors.payeeID}
 							/>
 							<Form.Control.Feedback type="invalid">
-								{errors.amount}
+								{errors.payeeID}
 							</Form.Control.Feedback>
 						</Form.Group>
 						<Form.Group as={Col} md="12" controlId="validationFormik02">
