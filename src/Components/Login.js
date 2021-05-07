@@ -5,6 +5,9 @@ import { Formik } from "formik";
 import { Form, Col, Button, Container, Image } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import { useHistory } from "react-router-dom";
+
+
 
 const schema = yup.object().shape({
     userName: yup.string().required('*Required'),
@@ -12,6 +15,7 @@ const schema = yup.object().shape({
   });
   
   function FormExample() {
+    const history = useHistory();
     return (
       <Formik
         validationSchema={schema}
@@ -35,7 +39,7 @@ const schema = yup.object().shape({
 					      //expiry.setSeconds(expiry.getSeconds() + 60);
                 //sessionStorage.setItem("expiry",expiry);
                 //sessionStorage.setItem("custID", res.data["custID"])
-                //history.replace("/home");
+                history.replace("/home");
 
             }).catch((error) => {
                 alert("You have entered the wrong username or password.")
