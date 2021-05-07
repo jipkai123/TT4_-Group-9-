@@ -57,6 +57,8 @@ class App extends Component {
           <Redirect from="/" exact to="/login" />
           <Route path="/login" component={Login} />
           <PrivateRoute path="/home" component={ViewBalance} />
+          <PrivateRoute path="/transactions" component={TransactionHistory} />
+          <PrivateRoute path="/egift" component={EGift} />
           <Route exact path="**" component={NotFound} />
         </Switch>
       </BrowserRouter>
