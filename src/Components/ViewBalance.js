@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Table} from 'react-bootstrap';
 import axios from 'axios';
-
 class ViewBalance extends Component {
     state = {
         accounts: []
@@ -10,30 +9,26 @@ class ViewBalance extends Component {
     componentDidMount() {
         this.checkAmountBalance();
       }
-    
+
     checkAmountBalance () {
-        const data = JSON.stringify({
-            custID: parseInt(sessionStorage.getItem('custID')),
-            accountKey: sessionStorage.getItem('accountKey'),
+      const custID = parseInt(sessionStorage.getItem('custID'));
+      const accountKey = sessionStorage.getItem('accountKey');
+      axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/accounts',
+        JSON.stringify({custID, accountKey}),
+        {
+          headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
+          data: {custID, accountKey}
+        }
+      )
+        .then((res) => {
+            let accounts = res.data;
+        this.setState({ accounts: accounts });
+        console.log(accounts)
+
+        }).catch((error) => {
+            alert("Unable to retrieve account balance")
+            console.log(error)
         });
-        console.log(data)
-     axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/accounts',
-            {
-                headers: {
-                    "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m',
-                },
-                data: data
-            })
-            .then((res) => {
-                let accounts = res.data;
-            this.setState({ accounts: accounts });
-            console.log(accounts)
-
-            }).catch((error) => {
-                alert("Unable to retrieve account balance")
-                console.log(error)
-            });
-
     }
 
     render() {
@@ -49,7 +44,7 @@ class ViewBalance extends Component {
                 </tr>
               </thead>
               <tbody>
-              { this.state.accounts.map(account => 
+              { this.state.accounts.map(account =>
                 <tr key={account.accountNumber}>
                   <td>{account.accountName}</td>
                   <td>{account.accountNumber}</td>
@@ -63,5 +58,5 @@ class ViewBalance extends Component {
         )
       }
     }
-    
+
 export default ViewBalance;

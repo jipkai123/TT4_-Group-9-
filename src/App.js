@@ -72,6 +72,8 @@ class App extends Component {
           </Navbar.Collapse>
         </Navbar>
           <PrivateRoute path="/home" component={ViewBalance} />
+          <PrivateRoute path="/transactions" component={TransactionHistory} />
+          <PrivateRoute path="/egift" component={EGift} />
           <Route exact path="**" component={NotFound} />
         </Switch>
       </BrowserRouter>
