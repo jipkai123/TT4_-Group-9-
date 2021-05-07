@@ -26,15 +26,6 @@ class ViewBalance extends Component {
             })
             .then((res) => {
                 let accounts = res.data;
-                for (let i = 0; i < accounts.length; i++) {
-                    if (accounts[i]['linked'] == true) {
-                    accounts[i]['islinked'] = 'Yes';
-              }
-              else {
-                accounts[i]['islinked'] = 'No';
-              }
-            }
-            
             this.setState({ accounts: accounts });
             console.log(accounts)
 
@@ -55,7 +46,6 @@ class ViewBalance extends Component {
                   <th><h5>Account Name</h5></th>
                   <th><h5>Account Number</h5></th>
                   <th><h5>Available Balance (SGD)</h5></th>
-                  <th><h5>Is Linked?</h5></th>
                 </tr>
               </thead>
               <tbody>
@@ -64,7 +54,6 @@ class ViewBalance extends Component {
                   <td>{account.accountName}</td>
                   <td>{account.accountNumber}</td>
                   <td>${account.availableBal}</td>
-                  <td>{account.islinked}</td>
                 </tr>
                 )
               }
