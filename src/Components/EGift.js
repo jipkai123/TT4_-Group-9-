@@ -12,28 +12,28 @@ const schema = yup.object().shape({
 	message: yup.string().notRequired()
 });
 
-function FormExample() {
+function EGiftForm() {
 	return (
 		<Formik
 			validationSchema={schema}
 			onSubmit={(values, { setSubmitting, resetForm }) => {
-				const custID = 9;
-				const accountKey = "tmrhdi7k-tp5t-ptk6-d577-yxg2illy0vi";
+				const custID = parseInt(sessionStorage.getItem('custID'));
+				const accountKey = sessionStorage.getItem('accountKey');
+				console.log(custID, accountKey)
 				const eGift = true;
-				const { payeeID, amount, saveLogin } = values;
+				const { payeeID, amount } = values;
 				axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/transactions/add',
 				JSON.stringify({payeeID, amount, custID, accountKey, eGift}),
 				{
-					headers: {
-							"x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m',
-					},
+					headers: { "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m' },
 					data: {payeeID, amount, custID, accountKey, eGift}
 				})
 					.then((res) => {
 						console.log(res)
+						alert(res.data.message)
 					}).catch((error) => {
 						alert("You have entered the wrong payeeID.")
-						console.log(error)
+						console.log(error.response.data)
 					});
 			}}
 			initialValues={{
@@ -103,8 +103,8 @@ function FormExample() {
 	);
 }
 
-let Login = () => {
-	return <FormExample />;
+let EGift = () => {
+	return <EGiftForm />;
 }
 
-export default Login
+export default EGift
