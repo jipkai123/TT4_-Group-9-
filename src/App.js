@@ -1,25 +1,27 @@
 import logo from './logo.svg';
 import './App.css';
+//import Components here
 
 function App() {
+  let routes;
+
+	routes = (
+		<Switch>
+			<PrivateRoute path="/home" component={ViewBalance} />
+			<PrivateRoute path="/AddTransaction" component={AddTransaction} />
+			<PrivateRoute path="/TransactionHistory" component={TransactionHistory} />
+      <Route exact path='/login' component={Loginpage} />
+			<Route exact path="/">
+				<Redirect to="/login" />
+			</Route>
+		</Switch>
+	);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+		<div className="App">
+			<Router>{routes}</Router>
+		</div>
   );
-}
+};
 
 export default App;
