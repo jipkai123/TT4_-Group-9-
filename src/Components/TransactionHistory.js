@@ -2,94 +2,45 @@ import './TransactionHistory.css'
 import TransactionItem from './TransactionItem'
 import { useState, useEffect } from 'react';
 
-let transactions = [
-    {
-        "eGift": false,
-        "datetime": 1612705768,
-        "custID": 9,
-        "amount": "57.51",
-        "message": "",
-        "payeeID": 1,
-        "expenseCat": "Insurance"
-    },
-    {
-        "eGift": true,
-        "datetime": 1612016194,
-        "custID": 9,
-        "amount": "647.70",
-        "message": "",
-        "payeeID": 13,
-        "expenseCat": "Transport"
-    },
-    {
-        "eGift": false,
-        "datetime": 1617000461,
-        "custID": 9,
-        "amount": "608.74",
-        "message": "",
-        "payeeID": 19,
-        "expenseCat": "Shopping"
-    },
-    {
-        "eGift": true,
-        "datetime": 1610593166,
-        "custID": 13,
-        "amount": "964.17",
-        "message": "Dinner",
-        "payeeID": 9,
-        "expenseCat": "Transfer"
-    },
-    {
-        "eGift": false,
-        "datetime": 1613030203,
-        "custID": 9,
-        "amount": "906.71",
-        "message": "",
-        "payeeID": 21,
-        "expenseCat": "Entertainment"
-    },
-    {
-        "eGift": false,
-        "datetime": 1618749967,
-        "custID": 9,
-        "amount": "193.60",
-        "message": "",
-        "payeeID": 15,
-        "expenseCat": "Others"
-    },
-    {
-        "eGift": true,
-        "datetime": 1618120355,
-        "custID": 9,
-        "amount": "724.25",
-        "message": "Dinner",
-        "payeeID": 21,
-        "expenseCat": "Shopping"
-    },
-    {
-        "eGift": false,
-        "datetime": 1611910613,
-        "custID": 12,
-        "amount": "501.74",
-        "message": "",
-        "payeeID": 9,
-        "expenseCat": "Transport"
-    }
-];
-
 const TransactionHistory = (props) => {
+    let transactions = [];
+    let accountInfo = [];
     const [filterMonth, setFilterMonth] = useState(new Date().toLocaleString('en-US', { month: 'long' }));
     const [filterYear, setFilterYear] = useState(new Date().getFullYear());
 
     async function getInfo() {
         try {
-            let id = 0;
+            let accountKey = sessionStorage.getItem('accountKey');
+            let custID = sessionStorage.getItem('custID');
+            await fetch("https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/accounts", {
+                method: "POST",
+                headers: { "x-api-key": "Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m" },
+                body: JSON.stringify({
+                    "custID": custID,
+                    "accountKey": accountKey
+                })
+            }).then(response => response.json())
+                .then(data => {
+                    accountInfo = data;
+                });
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+    useEffect(() => {
+        getInfo();
+    }, []);
+
+    async function getTransactions() {
+        try {
+            let accountKey = sessionStorage.getItem('accountKey');
+            let custID = sessionStorage.getItem('custID');
             await fetch("https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/transactions/view", {
                 method: "POST",
                 headers: { "x-api-key": "Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m" },
                 body: JSON.stringify({
-                    "custID": 9,
-                    "accountKey": "tmrhdi7k-tp5t-ptk6-d577-yxg2illy0vi"
+                    "custID": custID,
+                    "accountKey": accountKey
                 })
             }).then(response => response.json())
                 .then(data => {
@@ -100,7 +51,7 @@ const TransactionHistory = (props) => {
         }
     }
     useEffect(() => {
-        getInfo();
+        getTransactions();
     }, []);
 
     // const filteredTransactionHistory = transactions;
@@ -123,8 +74,8 @@ const TransactionHistory = (props) => {
     return (
         <div>
             <div className="account-details">
-                <h2>Multiplier Account</h2>
-                <h5>12152818</h5>
+                <h2>{accountInfo.accountName}</h2>
+                <h5>{accountInfo.accountNumber}</h5>
             </div>
             <div className='expenses-filter'>
                 <div className='expenses-filter__control'>
