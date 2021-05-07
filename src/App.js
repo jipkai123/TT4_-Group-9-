@@ -6,6 +6,7 @@ import React from 'react';
 import PrivateRoute from './Components/PrivateRoute';
 import ViewBalance from './Components/ViewBalance';
 import TransactionHistory from './Components/TransactionHistory';
+import EGift from './Components/EGift'
 
 //import Components here
 
@@ -16,6 +17,7 @@ function App() {
 		<Switch>
       <PrivateRoute path="/home" component={ViewBalance} />
       <PrivateRoute path="/transactions" component={TransactionHistory} />
+      <PrivateRoute path="/egift" component={EGift} />
       <Route exact path='/login' component={Login} />
 			<Route exact path="/">
 				<Redirect to="/login" />
