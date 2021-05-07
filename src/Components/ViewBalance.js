@@ -11,12 +11,12 @@ class ViewBalance extends Component {
         this.checkAmountBalance();
       }
     
-    checkAmountBalance () => {
+    checkAmountBalance () {
         const data = JSON.stringify({
             custID: sessionStorage.getItem('custID'),
-            accountKey: sessionStorage.getItem('accountKey')
+            accountKey: sessionStorage.getItem('accountKey'),
         });
-     axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/login',
+     axios.post('https://ipllrj2mq8.execute-api.ap-southeast-1.amazonaws.com/techtrek/accounts',
             {
                 headers: {
                     "x-api-key": 'Jkx76CEYnp3NaTpwSXceo4ONDFLJNZcA717hzo1m',
@@ -33,4 +33,35 @@ class ViewBalance extends Component {
             });
 
     }
-}
+
+    render() {
+        return (
+          <div>
+            <h2>Account Details</h2>
+            <Table>
+              <thead>
+                <tr>
+                  <th><h5>Account Name</h5></th>
+                  <th><h5>Account Number</h5></th>
+                  <th><h5>Available Balance (SGD)</h5></th>
+                  <th><h5>Is Linked?</h5></th>
+                </tr>
+              </thead>
+              <tbody>
+              { this.state.accounts.map(account => 
+                <tr key="{accounts.key}">
+                  <td>{account.accountName}</td>
+                  <td>{account.accountNumber}</td>
+                  <td>${account.availableBal}</td>
+                  <td>{account.islinked}</td>
+                </tr>
+                )
+              }
+              </tbody>
+            </Table>
+          </div>
+        )
+      }
+    }
+    
+    export default ViewBalance;
