@@ -13,7 +13,7 @@ var initialSchema = yup.object().shape({
 	payeeID: yup.number().required('*Required').min(1),
 	amount: amountSchema,
 	message: yup.string().notRequired(),
-	isEGift: yup.boolean().notRequired()
+	eGift: yup.boolean().notRequired()
 })
 
 function getBalance(custID, accountKey, setAvailableBal, setSchema) {
@@ -75,16 +75,15 @@ function EGiftForm() {
 			validationSchema={schema}
 			onSubmit={(values, { setSubmitting, resetForm }) => {
 				setIsSending(true);
-				const eGift = true;
-				const { payeeID, amount, message } = values;
-				console.log(message)
+				const { payeeID, amount, message, eGift } = values;
+				console.log(eGift)
 				sendEGift(payeeID, amount, custID, accountKey, message, eGift, setAvailableBal, setSchema, setIsSending);
 			}}
 			initialValues={{
 				payeeID: '',
 				amount: '',
 				message: '',
-				isEGift: false
+				eGift: false
 			}}
 		>
 			{({
@@ -144,6 +143,13 @@ function EGiftForm() {
 								onBlur ={handleBlur}
 							/>
 						</Form.Group>
+						<Form.Check
+							type="checkbox"
+							label="eGift"
+							name="eGift"
+							onChange={handleChange}
+							value={values.eGift}
+						/>
 						<Button type="submit" disabled={isSending} variant='danger'>
 							{isSending ?
 									<>
@@ -151,10 +157,10 @@ function EGiftForm() {
 											className="fa fa-spinner fa-spin"
 											style={{ marginRight: "5px" }}
 										/>
-										<span>Sending eGift..</span>
+										<span>Sending Payment..</span>
 									</>
 								:
-								<span>Send eGift!</span>
+								<span>Pay!</span>
 							}
 						</Button>
 					</Form>
